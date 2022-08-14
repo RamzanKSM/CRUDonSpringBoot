@@ -1,19 +1,45 @@
 package withoutgroup.CRUDonSpringBoot.service;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import withoutgroup.CRUDonSpringBoot.model.User;
+import withoutgroup.CRUDonSpringBoot.repository.UserRepository;
 
 import java.util.List;
+@Service
+public class UserService {
 
-public interface UserService {
+    private UserRepository userRepository;
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    void add(User user);
+    public UserService() {
+    }
 
-    void remove(long id);
+    @Transactional
+    public void add(User user) {
+        userRepository.save(user);
+    }
 
-    void update(long id, User user);
+    @Transactional
+    public void remove(long id) {
+        userRepository.delete(userRepository.findById(id).get());
+    }
 
-    User getOneUser(long id);
+    @Transactional
+    public void update(long id, User user) {
+        user.setId(id);
+        userRepository.save(user);
+    }
 
-    List<User> getAllUsers();
+    public User getOneUser(long id) {
+        return userRepository.findById(id).get();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
